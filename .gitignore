@@ -1,0 +1,7 @@
+.pytest_cache/
+build/
+dist/
+django_changelist_inline.egg-info/
+
+.envrc
+django_changelist_inline.sqlite3
