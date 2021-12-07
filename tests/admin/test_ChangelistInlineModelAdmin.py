@@ -30,6 +30,10 @@ class ChangelistInlineModelAdminTestCase(TestCase):
         self.assertIsNone(model_admin.date_hierarchy)
         self.assertEqual(model_admin.sortable_by, ())
 
+        # Account for `search_help_text` attr added in Django 4.0
+        if hasattr(model_admin, 'search_help_text'):
+            self.assertIsNone(model_admin.search_help_text)
+
     @mock.patch('django.contrib.admin.ModelAdmin.get_actions')
     def test_get_actions(self, mock_get_actions):
         # Given

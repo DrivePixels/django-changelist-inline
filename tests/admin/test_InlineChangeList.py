@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from distutils.version import StrictVersion
 from unittest import mock
 
+import django
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.http import HttpRequest
@@ -33,12 +35,21 @@ class InlineChangeListTestCase(TestCase):
             thing, RelatedThing, admin.site,
         )
 
-    def test_init(self):
-        # When
-        change_list = InlineChangeList(
+    def _get_change_list_args(self):
+        result = [
             self.fake_request, Thing, ['pk'], ['pk'], [], None, None, None, 5,
             5, None, self.model_admin, None,
-        )
+        ]
+
+        django_version = StrictVersion(django.__version__)
+        if django_version.version[0] >= 4:
+            result.append(None)  # Account for the new `search_help_text` arg
+
+        return result
+
+    def test_init(self):
+        # When
+        change_list = InlineChangeList(*self._get_change_list_args())
 
         # Then
         self.assertIsNone(change_list.formset)
@@ -51,11 +62,8 @@ class InlineChangeListTestCase(TestCase):
         self.assertIsNone(change_list.toolbar_links)
 
     def test_get_filters_params(self):
-        # Give
-        change_list = InlineChangeList(
-            self.fake_request, Thing, ['pk'], ['pk'], [], None, None, None, 5,
-            5, None, self.model_admin, None,
-        )
+        # Given
+        change_list = InlineChangeList(*self._get_change_list_args())
 
         # When
         result = change_list.get_filters_params(params={'q': 'spam'})
@@ -65,10 +73,7 @@ class InlineChangeListTestCase(TestCase):
 
     def test_has_toolbar_False(self):
         # Given
-        change_list = InlineChangeList(
-            self.fake_request, Thing, ['pk'], ['pk'], [], None, None, None, 5,
-            5, None, self.model_admin, None,
-        )
+        change_list = InlineChangeList(*self._get_change_list_args())
         change_list.add_url = None
         change_list.show_all_url = None
         change_list.toolbar_links = None
@@ -78,10 +83,7 @@ class InlineChangeListTestCase(TestCase):
 
     def test_has_toolbar_True_with_add_url(self):
         # Given
-        change_list = InlineChangeList(
-            self.fake_request, Thing, ['pk'], ['pk'], [], None, None, None, 5,
-            5, None, self.model_admin, None,
-        )
+        change_list = InlineChangeList(*self._get_change_list_args())
         change_list.add_url = 'add_url'
         change_list.show_all_url = None
         change_list.toolbar_links = None
@@ -91,10 +93,7 @@ class InlineChangeListTestCase(TestCase):
 
     def test_has_toolbar_True_with_show_all_url(self):
         # Given
-        change_list = InlineChangeList(
-            self.fake_request, Thing, ['pk'], ['pk'], [], None, None, None, 5,
-            5, None, self.model_admin, None,
-        )
+        change_list = InlineChangeList(*self._get_change_list_args())
         change_list.add_url = None
         change_list.show_all_url = 'show_all_url'
         change_list.toolbar_links = None
@@ -104,10 +103,7 @@ class InlineChangeListTestCase(TestCase):
 
     def test_has_toolbar_True_with_toolbar_links(self):
         # Given
-        change_list = InlineChangeList(
-            self.fake_request, Thing, ['pk'], ['pk'], [], None, None, None, 5,
-            5, None, self.model_admin, None,
-        )
+        change_list = InlineChangeList(*self._get_change_list_args())
         change_list.add_url = None
         change_list.show_all_url = None
         change_list.toolbar_links = 'toolbar_links'

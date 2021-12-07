@@ -38,6 +38,9 @@ class ChangelistInlineModelAdmin(admin.ModelAdmin):
         self.sortable_by = ()
         self.show_full_result_count = False
 
+        if hasattr(self, 'search_help_text') is True:
+            self.search_help_text = None
+
     def get_actions(self, request):
         return []
 
