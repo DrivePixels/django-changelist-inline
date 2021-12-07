@@ -27,7 +27,7 @@ PACKAGES = find_packages(
 
 setup(
     name='django-changelist-inline',
-    version='1.0.2',
+    version='1.0.3',
     url='https://git.bthlabs.pl/tomekwojcik/django-changelist-inline',
     license='Other/Proprietary License',
     author='Tomek Wójcik',
