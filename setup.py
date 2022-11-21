@@ -41,7 +41,7 @@ setup(
     ],
     packages=PACKAGES,
     include_package_data=True,
-    python_requires='>=3.8',
+    python_requires='>=3.6',
     install_requires=REQUIREMENTS,
     extras_require={
         'dev': REQUIREMENTS_DEV,
